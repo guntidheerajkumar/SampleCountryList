@@ -20,12 +20,20 @@ namespace SampleCountryList
         {
             base.ViewDidLoad();
             Countries = GlobalCountries.GetCountries();
+            CountriesTableView.RegisterNibForCellReuse(CountryTableViewCell.Nib, CountryTableViewCell.Key);
 
             CountriesTableView.Source = new TableSource(Countries, NavController);
             CountriesTableView.ReloadData();
 
             CountriesSearchBar.AutocorrectionType =  UITextAutocorrectionType.No;
             CountriesSearchBar.TextChanged += CountriesSearchBar_TextChanged;
+
+            ButtonReturn.TouchUpInside += ButtonReturn_TouchUpInside;
+        }
+
+        private void ButtonReturn_TouchUpInside(object sender, EventArgs e)
+        {
+            NavController.DismissModalViewController(true);
         }
 
         private void CountriesSearchBar_TextChanged(object sender, UISearchBarTextChangedEventArgs e)
@@ -62,23 +70,14 @@ namespace SampleCountryList
 
         public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
         {
-            UIImage uIImage = null;
-            UITableViewCell cell = tableView.DequeueReusableCell(CellIdentifier);
+            var cell = tableView.DequeueReusableCell(CountryTableViewCell.Key, indexPath) as CountryTableViewCell;
             var item = TableItems[indexPath.Row];
-            if (cell == null)
-            {
-                cell = new UITableViewCell(UITableViewCellStyle.Value1, CellIdentifier);
-            }
             try
             {
                 if (item.CountryFlag != null)
                 {
-                    var data = NSData.FromArray(item.CountryFlag);
-                    uIImage = UIImage.LoadFromData(data);
+                    cell.SetUp(item.CountryName, item.CountryFlag);
                 }
-
-                cell.TextLabel.Text = item.CountryName;
-                cell.ImageView.Image = uIImage != null ? uIImage : new UIImage();
             }
             catch (Exception ex)
             {

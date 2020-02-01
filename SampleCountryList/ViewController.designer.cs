@@ -13,6 +13,9 @@ namespace SampleCountryList
 	partial class ViewController
 	{
 		[Outlet]
+		UIKit.UIButton ButtonReturn { get; set; }
+
+		[Outlet]
 		UIKit.UISearchBar CountriesSearchBar { get; set; }
 
 		[Outlet]
@@ -23,6 +26,11 @@ namespace SampleCountryList
 		
 		void ReleaseDesignerOutlets ()
 		{
+			if (CountriesSearchBar != null) {
+				CountriesSearchBar.Dispose ();
+				CountriesSearchBar = null;
+			}
+
 			if (CountriesTableView != null) {
 				CountriesTableView.Dispose ();
 				CountriesTableView = null;
@@ -33,9 +41,9 @@ namespace SampleCountryList
 				CountriesTextField = null;
 			}
 
-			if (CountriesSearchBar != null) {
-				CountriesSearchBar.Dispose ();
-				CountriesSearchBar = null;
+			if (ButtonReturn != null) {
+				ButtonReturn.Dispose ();
+				ButtonReturn = null;
 			}
 		}
 	}
